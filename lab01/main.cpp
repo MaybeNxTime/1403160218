@@ -5,7 +5,7 @@
 #include<stdlib.h>
 
 
-typedef struct list{
+typedef struct {
     int num;
     QString name;
     int grade1;
