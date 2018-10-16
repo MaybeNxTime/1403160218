@@ -40,13 +40,17 @@ enum SortKind{
 };
 }
 
-
 typedef struct{
-    // 请补全结构定义
+    QString number;
+    QString name;
+    QVector<QString>lesson;
 } studData;
 
+
+//运算符重载函数。可以直接输出studData结构
 QDebug operator<< (QDebug d, const studData &data) {
-    // 请补全运算符重载函数，使其可以直接输出studData结构
+    QDebugStateSaver saver(d);
+    d.noquote().nospace()<<'('<<data.studNumber<<data.studName<<data.studScore<<')';//QDebug在输出QString和QByteArray等类型的内容时，会自动为其添加双引号。而有时，这反而会让控制台的信息更密集，不便于分析结果。所以，使用该函数，修改此默认设置
     return d;
 }
 
@@ -64,11 +68,9 @@ bool myCmp::operator()(const studData &d1, const studData &d2)
     bool result = false;
     quint32 sortedColumn = 0x00000001<<currentColumn;
     switch (sortedColumn) {
-    case SK::col01:
-    // ...
-    // 请补全运算符重载函数
-    // ...
-    //
+    case SK::col01:result=(d1.number>d2.number);break;
+    case SK::col02:result=(d1.name>d2.name);break;
+    default:result=(d1.lesson.at(currentColumn)>d2.lesson.at(currentColumn));break;
     }
     return result;
 
