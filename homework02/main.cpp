@@ -117,11 +117,11 @@ void ScoreSorter::readfile(){
 }
 
 void ScoreSorter::dsort(){
-    for(int i=1;i<title.student.size();i++){
+    for(int i=1;i<title.student.size()-1;i++){
         /*参考资料：https://blog.csdn.net/maverick1990/article/details/37738601   声明比较规则类*/
         myCmp tcmp(i-1);//初始化
         std::sort(this->data.begin(),this->data.end() , tcmp) ;
-        qDebug()<<"当前按照第"<<i+1<<"列排序：";
+        qDebug()<<"当前按照第"<<i+1<<"列排序：\n";
         qDebug()<<"\t"<<(this->title); //qDebug重载后输出
         for(int i=0;i<this->data.size();i++)
             qDebug()<<this->data.at(i);

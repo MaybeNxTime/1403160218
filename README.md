@@ -8,7 +8,7 @@
 
 ### 一次提交：定义结构体、用QList连接结构体，用qSort函数调用CompareStudentGrade1、CompareStudentGrade2、CompareStudentName三个函数，实现对学生的关于成绩1、成绩2、姓名的排序并输出。
 
-## 3.homework02。提交日期 2018-10-17，实现作业二要求的功能，共提交了五次。
+## 3.homework02。提交日期 2018-10-17，实现作业二要求的功能，共提交了六次。
 
 ### 第一次提交：拷贝初始代码；
 
@@ -19,3 +19,5 @@
 ### 第四次提交：将QList<QString>改为QStringList，编写myMessageOutput自定义消息处理函数，调用qInstallMessageHandeler输出数据至文件，弃用QCoreApplication头文件、消除了大部分bug；
 
 ### 第五次提交：更新readme。
+
+### 第六次提交：解决了多输出一次的问题。
