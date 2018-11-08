@@ -230,6 +230,20 @@
            painter.drawPolygon(points);
        }        
            break;
+       case ST::Diamond:{
+           //菱形的四个顶点
+           QPointF point4((ptStart.x()+ptEnd.x())/2,ptStart.y());
+           QPointF point5(ptStart.x(),(ptStart.y()+ptEnd.y())/2);
+           QPointF point6(ptEnd.x(),(ptStart.y()+ptEnd.y())/2);
+           QPointF point7((ptStart.x()+ptEnd.x())/2,ptEnd.y());
+
+           QVector<QPointF> points_;
+           points_<<point4<<point5<<point7<<point6;
+
+           //画多边形
+           painter.drawPolygon(points_);
+       }
+           break;
        case ST::Text:{
    
            if(drawnText.isEmpty()){

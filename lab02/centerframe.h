@@ -40,6 +40,7 @@
        void on_btnEllipseClicked();
        void on_btnLineClicked();
        void on_btnTriangleClicked();
+       void on_btnDiamondClicked();
        void on_btnTextClicked();
        void on_edtTextEdited(const QString &text);
    
@@ -53,6 +54,7 @@
        QPushButton* btnEllipse;
        QPushButton* btnLine;
        QPushButton* btnTriangle;
+       QPushButton* btnDiamond;
        QPushButton* btnText;
        QLineEdit* edtText;
    
