@@ -1,6 +1,6 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2018-10-24T16:37:56
+# Project created by QtCreator 2018-10-28T14:32:38
 #
 #-------------------------------------------------
 
@@ -35,5 +35,7 @@ HEADERS += \
     common.h \
     drawwidget.h
 
-FORMS += \
-        mainwindow.ui
+RESOURCES += \
+    pic.qrc
+
+DISTFILES +=
