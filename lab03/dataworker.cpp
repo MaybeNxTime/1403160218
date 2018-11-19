@@ -43,6 +43,19 @@ void dataWorker::setRequestDate(QString newDate)
     _requestDate = newDate.replace("-","");
 }
 
+void dataWorker::setRequestCity(QString newCity)
+{
+
+    _requestCity = newCity;
+}
+
+void dataWorker::setMode(QString newMode)
+{
+    _requestMode=newMode;
+}
+
+
+
 
 /**
  * @brief getter函数，获得当前的年月
@@ -53,6 +66,17 @@ QString dataWorker::requestDate()
     return _requestDate;
 }
 
+QString dataWorker::requestCity()
+{
+    return _requestCity;
+}
+
+QString dataWorker::requestMode()
+{
+    return _requestMode;
+}
+
+
 /**
  * @brief 开始发送请求
  *
@@ -62,7 +86,7 @@ QString dataWorker::requestDate()
 void dataWorker::doRequest()
 {
     // 导入数据，首先检查是否已经存在数据文件
-    QString fName = QString("%1/%2.txt").arg(dataPath,_requestDate);
+    QString fName = QString("%1/%2%3.txt").arg(dataPath,_requestDate,_requestCity);
 //    qDebug()<<fName;
     QStringList dataList;
     QFile f(fName);
@@ -88,8 +112,15 @@ void dataWorker::doRequest()
  */
 QString dataWorker::requestUrl()
 {    
-    QString r =
-            QString("https://lishi.tianqi.com/nanjing/%1.html").arg(_requestDate);
+    QString r ="";
+    if(_requestMode=="查询天气")
+    {
+     r=QString("https://lishi.tianqi.com/%1/%2.html").arg(_requestCity,_requestDate);
+    }
+    else if(_requestMode=="AQI,PM2.5")
+    {
+        r=QString("http://www.tianqihoubao.com/aqi/%1-%2.html").arg(_requestCity,_requestDate);
+    }
     qDebug()<<r;
     return r;
 }
@@ -120,6 +151,8 @@ void dataWorker::initNetwork()
  */
 void dataWorker::parseHTML(const QString sourceText)
 {
+    if(_requestMode=="查询天气")
+    {
     // 使用QXmlStreamReader解析Html文档
     QXmlStreamReader reader(sourceText.simplified().trimmed());
 
@@ -140,7 +173,33 @@ void dataWorker::parseHTML(const QString sourceText)
             exportDataToFile(strData.join(splitter));
         }
     }
-
+    }
+    if(_requestMode=="AQI,PM2.5")
+       {
+       // 使用QXmlStreamReader解析Html文档
+              QXmlStreamReader reader(sourceText.simplified().trimmed());
+              QStringList strData;
+              while (!reader.atEnd())
+              {
+                  reader.readNext();
+                  if (reader.isStartElement())
+                  {
+                      if (reader.name() == "tr"){         // 查找Html标签：tr
+                          strData<<reader.readElementText(QXmlStreamReader::IncludeChildElements).trimmed();
+                      }
+                  }
+              }
+              if (reader.hasError())
+              {
+                  qDebug()<< "  读取错误： " << reader.errorString();
+              }else{
+                  if(!strData.isEmpty())
+                  {
+                      parseData(strData.join(splitter));
+                      exportDataToFile(strData.join(splitter));
+                  }
+              }
+       }
 }
 
 /**
@@ -158,6 +217,8 @@ void dataWorker::parseData(const QString sourceText)
     dataDate.clear();
     dataHigh.clear();
     dataLow.clear();
+            if(_requestMode=="查询天气")
+    {
 
     dataList.removeFirst();                  // 第一条数据是表头，删除
     for (QString s : dataList){
@@ -168,6 +229,20 @@ void dataWorker::parseData(const QString sourceText)
         dataLow.append(dataList.at(2).toDouble());
     }
     emit dataParseFinished(dataDate,dataHigh,dataLow);
+}
+            if(_requestMode=="AQI,PM2.5")
+            {
+                dataList.removeFirst();                  // 第一条数据是表头，删除
+                for (QString s : dataList)
+                {
+                    QStringList dataList = s.split(" ",QString::SkipEmptyParts);
+                    QDateTime momentInTime = QDateTime::fromString(dataList.at(0),"yyyy-MM-dd");
+                    dataDate.append(momentInTime);
+                    dataHigh.append(dataList.at(2).toDouble());
+                    dataLow.append(dataList.at(4).toDouble());
+                }
+                emit dataParseFinished(dataDate,dataHigh,dataLow);
+                qDebug()<<"提取文本";}
 }
 
 /**
@@ -247,6 +322,8 @@ void dataWorker::httpsFinished(QNetworkReply *reply)
 
     // 先做一个简单处理，将包含内容的完整<div>..</div>标签内的文本内容，
     // 并滤除其中的空白字符"\r\n\t"
+            if(_requestMode=="查询天气")
+    {
     int begin = html.indexOf("<div class=\"tqtongji2\">");
     int end = html.indexOf("<div class=\"lishicity03\">");
     html = html.mid(begin,end-begin);
@@ -260,6 +337,16 @@ void dataWorker::httpsFinished(QNetworkReply *reply)
         qDebug()<<"HTML内容为空："<<html;
         emit dataParseError(QString("HTML内容为空"));
     }
+    }
+            if(_requestMode=="AQI,PM2.5"){
+                int begin = html.indexOf("<div class=\"api_month_list\">");
+                int end = html.indexOf("<div id=\"chartdiv\" align=\"center\">");
+                html = html.mid(begin,end-begin);
+                html = html.left(html.indexOf("<p >"));
+                html = html.simplified().trimmed();
+                // 开始解析HTML
+                parseHTML(html);
 
+            }
 }
 
