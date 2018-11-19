@@ -339,6 +339,7 @@ void mainWidget::on_btnStart_clicked()
     if(ui->comboMonth->count()>0){
         chartTitle = ui->comboMonth->currentText().replace("-","年");
         chartTitle.append(QString("月 %1气温").arg(ui->comboCity->currentText()));
+        resetChart(chartTitle);
     }else{
         chartTitle="气温";
     }
