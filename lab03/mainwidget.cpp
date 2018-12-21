@@ -58,7 +58,7 @@ void mainWidget::initComboMonth()
 void mainWidget::initComboCity()
 {
     QStringList city;
-    city<<"南京"<<"北京"<<"上海"<<"哈尔滨"<<"杭州";
+    city<<"南京"<<"北京"<<"上海"<<"扬州"<<"杭州";
     ui->comboCity->clear();
     ui->comboCity->addItems(city);
 
@@ -301,14 +301,14 @@ void mainWidget::on_btnStart_clicked()
     ui->btnStart->setEnabled(false);
     ui->comboCity->setEnabled(false);
 
-//    chart->legend()->hide();
-//    chart->legend()->setAlignment(Qt::AlignBottom);
+    //    chart->legend()->hide();
+    //    chart->legend()->setAlignment(Qt::AlignBottom);
 
 
-    //选择城市
-    if(ui->comboCity->currentText()=="北京")
-    {
-        worker->setRequestCity("beijing");
+        //选择城市
+        if(ui->comboCity->currentText()=="北京")
+        {
+            worker->setRequestCity("beijing");
     }
     else if(ui->comboCity->currentText()=="南京")
     {
@@ -326,9 +326,9 @@ void mainWidget::on_btnStart_clicked()
     {
         worker->setRequestCity("shanghai");
     }
-    else if(ui->comboCity->currentText()=="哈尔滨")
+    else if(ui->comboCity->currentText()=="扬州")
     {
-        worker->setRequestCity("haerbin");
+        worker->setRequestCity("yangzhou");
     }
 
     if(ui->Temprature->isChecked())
